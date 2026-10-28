@@ -1,0 +1,961 @@
+@import 'tailwindcss';
+
+/* `dark:` utilities follow the app theme attribute rather than the OS
+   setting, so both stay in agreement. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ==================================================================
+   VINAYAK SILVER — DESIGN SYSTEM
+   Visual language aligned to the reference product: a light, indigo-
+   accented ERP surface. White panels on a softly tinted canvas, one
+   confident primary, and restrained status colour.
+   ================================================================== */
+
+@theme {
+  --font-sans:
+    'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---------------------------------------------------------------
+     Neutrals — cool platinum ramp on the reference values.
+     silver-100 is the canvas, silver-200/300 are hairlines and
+     control outlines, silver-500/600/700 are muted text.
+     --------------------------------------------------------------- */
+  --color-silver-50: #f8fafc;
+  --color-silver-100: #f3f5f9;
+  --color-silver-200: #e5e9f0;
+  --color-silver-300: #d2d8e3;
+  --color-silver-400: #a7b0c0;
+  --color-silver-500: #8590a3;
+  --color-silver-600: #667085;
+  --color-silver-700: #475467;
+  --color-silver-800: #2b3546;
+  --color-silver-900: #182031;
+  --color-silver-950: #0f172a;
+
+  /* ---------------------------------------------------------------
+     Ink — deep navy chrome for headings, dark surfaces and the
+     printed brand mark. navy-900 matches the reference body text.
+     --------------------------------------------------------------- */
+  --color-navy-50: #f1f4f8;
+  --color-navy-100: #e2e7ef;
+  --color-navy-200: #c8d0dd;
+  --color-navy-300: #9aa5b8;
+  --color-navy-400: #6b7891;
+  --color-navy-500: #4b5567;
+  --color-navy-600: #3a4356;
+  --color-navy-700: #2b3445;
+  --color-navy-800: #1c2537;
+  --color-navy-900: #0f172a;
+  --color-navy-950: #080d17;
+
+  /* ---------------------------------------------------------------
+     Semantic surfaces. `surface` is the panel colour that flips with
+     the theme; `ink` is a fixed near-black reserved for elements that
+     must stay dark in both themes (printed marks, number dots).
+     --------------------------------------------------------------- */
+  --color-surface: #ffffff;
+  --color-ink: #0f172a;
+
+  /* ---------------------------------------------------------------
+     Primary — indigo. The reference action colour (#df6527).
+     `sapphire-*` and `blue-*` are the same system so existing
+     `bg-blue-600` call sites stay on-palette.
+     --------------------------------------------------------------- */
+  --color-sapphire-50: #fff5ee;
+  --color-sapphire-100: #ffe6d4;
+  --color-sapphire-200: #fccba8;
+  --color-sapphire-300: #f8aa77;
+  --color-sapphire-400: #f28c4c;
+  --color-sapphire-500: #ed7333;
+  --color-sapphire-600: #df6527;
+  --color-sapphire-700: #c4531c;
+  --color-sapphire-800: #943f17;
+  --color-sapphire-900: #7a3616;
+  --color-sapphire-950: #5a2710;
+
+  --color-blue-50: #fff5ee;
+  --color-blue-100: #ffe6d4;
+  --color-blue-200: #fccba8;
+  --color-blue-300: #f8aa77;
+  --color-blue-400: #f28c4c;
+  --color-blue-500: #ed7333;
+  --color-blue-600: #df6527;
+  --color-blue-700: #c4531c;
+  --color-blue-800: #943f17;
+  --color-blue-900: #7a3616;
+  --color-blue-950: #5a2710;
+
+  /* ---------------------------------------------------------------
+     Accent — burnished amber for value and premium moments. Never a
+     status colour, so it can never be read as a warning.
+     --------------------------------------------------------------- */
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+  --color-gold-800: #92400e;
+  --color-gold-900: #78350f;
+
+  /* ---------------------------------------------------------------
+     Status ramps — tuned on one lightness ladder so no state shouts
+     louder than another.
+     --------------------------------------------------------------- */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
+
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
+  --color-amber-950: #451a03;
+
+  --color-rose-50: #fef2f2;
+  --color-rose-100: #fee2e2;
+  --color-rose-200: #fecaca;
+  --color-rose-300: #fca5a5;
+  --color-rose-400: #f87171;
+  --color-rose-500: #ef4444;
+  --color-rose-600: #dc2626;
+  --color-rose-700: #b91c1c;
+  --color-rose-800: #991b1b;
+  --color-rose-900: #7f1d1d;
+  --color-rose-950: #450a0a;
+
+  --color-violet-50: #f5f3ff;
+  --color-violet-100: #ede9fe;
+  --color-violet-200: #ddd6fe;
+  --color-violet-300: #c4b5fd;
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+  --color-violet-700: #6d28d9;
+  --color-violet-800: #5b21b6;
+  --color-violet-900: #4c1d95;
+  --color-violet-950: #2e1065;
+
+  --color-cyan-50: #f0f9ff;
+  --color-cyan-100: #e0f2fe;
+  --color-cyan-200: #bae6fd;
+  --color-cyan-300: #7dd3fc;
+  --color-cyan-400: #38bdf8;
+  --color-cyan-500: #0ea5e9;
+  --color-cyan-600: #0284c7;
+  --color-cyan-700: #0369a1;
+  --color-cyan-800: #075985;
+  --color-cyan-900: #0c4a6e;
+  --color-cyan-950: #082f49;
+
+  /* ---------------------------------------------------------------
+     Elevation — a hairline ring plus a soft, low-opacity shadow.
+     Light falls from above; higher objects cast a wider shadow.
+     --------------------------------------------------------------- */
+  --shadow-flat: 0 0 0 1px rgba(15, 23, 42, 0.05);
+  --shadow-card:
+    0 0 0 1px rgba(15, 23, 42, 0.05),
+    0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-lift:
+    0 0 0 1px rgba(15, 23, 42, 0.05),
+    0 4px 8px -2px rgba(15, 23, 42, 0.06),
+    0 12px 24px -10px rgba(15, 23, 42, 0.14);
+  --shadow-panel:
+    0 0 0 1px rgba(15, 23, 42, 0.06),
+    0 10px 24px -8px rgba(15, 23, 42, 0.16),
+    0 20px 48px -16px rgba(15, 23, 42, 0.18);
+  --shadow-modal:
+    0 0 0 1px rgba(15, 23, 42, 0.08),
+    0 30px 70px -20px rgba(15, 23, 42, 0.4);
+
+  /* ---------------------------------------------------------------
+     Radii — 16px panels, 12px controls, 20px dialogs.
+     --------------------------------------------------------------- */
+  --radius-lg: 0.75rem;
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.25rem;
+
+  /* ---------------------------------------------------------------
+     Motion — decelerating curves only. Bounce and elastic read as
+     toys in an instrument, so they are not in the system.
+     --------------------------------------------------------------- */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-fade-in: fade-in 200ms var(--ease-out-quart) both;
+  --animate-slide-up: rise 240ms var(--ease-out-expo) both;
+  --animate-pop-in: pop-in 200ms var(--ease-out-expo) both;
+  --animate-pulse-ring: pulse-ring 2000ms var(--ease-out-quart) infinite;
+  /* Exits run shorter than entrances: the user already understands the
+     object by the time it leaves. */
+  --animate-fade-out: fade-out 150ms var(--ease-out-quart) both;
+  --animate-scale-out: scale-out 150ms var(--ease-out-quart) both;
+}
+
+/* ------------------------------------------------------------------ */
+/* Dark theme                                                         */
+/* Every semantic ramp is re-declared, so any component built from the */
+/* shared tokens adapts without a single `dark:` utility. Scoped to    */
+/* `screen` on purpose: printed documents always render on the light   */
+/* token set.                                                          */
+/* ------------------------------------------------------------------ */
+
+@media screen {
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+
+    --color-surface: #121826;
+    --color-ink: #0f172a;
+
+    /* neutrals — canvas, panels, hairlines, muted text */
+    --color-silver-50: #161d2b;
+    --color-silver-100: #0b0f19;
+    --color-silver-200: #232c3d;
+    --color-silver-300: #323d52;
+    --color-silver-400: #4b5872;
+    --color-silver-500: #7d889e;
+    --color-silver-600: #98a2b6;
+    --color-silver-700: #aeb7c9;
+    --color-silver-800: #cdd5e2;
+    --color-silver-900: #e4e9f2;
+    --color-silver-950: #f2f5fb;
+
+    /* ink chrome — headings and body text become light */
+    --color-navy-50: #1a2233;
+    --color-navy-100: #222c40;
+    --color-navy-200: #2c3850;
+    --color-navy-300: #46536b;
+    --color-navy-400: #6b7893;
+    --color-navy-500: #8b95a9;
+    --color-navy-600: #a9b2c4;
+    --color-navy-700: #c6cede;
+    --color-navy-800: #dde3ee;
+    --color-navy-900: #e9edf6;
+    --color-navy-950: #f3f6fc;
+
+    /* primary — solid steps hold, tints become translucent, ink steps lift */
+    --color-sapphire-50: rgba(237, 115, 51, 0.14);
+    --color-sapphire-100: rgba(237, 115, 51, 0.26);
+    --color-sapphire-200: rgba(237, 115, 51, 0.4);
+    --color-sapphire-300: #f8aa77;
+    --color-sapphire-400: #f28c4c;
+    --color-sapphire-500: #ed7333;
+    --color-sapphire-600: #df6527;
+    --color-sapphire-700: #f28c4c;
+    --color-sapphire-800: #f8aa77;
+    --color-sapphire-900: #fccba8;
+    --color-sapphire-950: #ddd6fe;
+
+    --color-blue-50: rgba(237, 115, 51, 0.14);
+    --color-blue-100: rgba(237, 115, 51, 0.26);
+    --color-blue-200: rgba(237, 115, 51, 0.4);
+    --color-blue-300: #f8aa77;
+    --color-blue-400: #f28c4c;
+    --color-blue-500: #ed7333;
+    --color-blue-600: #df6527;
+    --color-blue-700: #f28c4c;
+    --color-blue-800: #f8aa77;
+    --color-blue-900: #fccba8;
+    --color-blue-950: #ddd6fe;
+
+    /* accent — gold / amber */
+    --color-gold-50: rgba(245, 158, 11, 0.14);
+    --color-gold-100: rgba(245, 158, 11, 0.24);
+    --color-gold-200: rgba(245, 158, 11, 0.4);
+    --color-gold-300: #fcd34d;
+    --color-gold-400: #fbbf24;
+    --color-gold-500: #f59e0b;
+    --color-gold-600: #d97706;
+    --color-gold-700: #fbbf24;
+    --color-gold-800: #fcd34d;
+    --color-gold-900: #fde68a;
+
+    /* status ramps */
+    --color-emerald-50: rgba(16, 185, 129, 0.14);
+    --color-emerald-100: rgba(16, 185, 129, 0.22);
+    --color-emerald-200: rgba(16, 185, 129, 0.4);
+    --color-emerald-300: #6ee7b7;
+    --color-emerald-400: #34d399;
+    --color-emerald-500: #10b981;
+    --color-emerald-600: #059669;
+    --color-emerald-700: #34d399;
+    --color-emerald-800: #6ee7b7;
+    --color-emerald-900: #a7f3d0;
+    --color-emerald-950: #d1fae5;
+
+    --color-amber-50: rgba(245, 158, 11, 0.14);
+    --color-amber-100: rgba(245, 158, 11, 0.24);
+    --color-amber-200: rgba(245, 158, 11, 0.4);
+    --color-amber-300: #fcd34d;
+    --color-amber-400: #fbbf24;
+    --color-amber-500: #f59e0b;
+    --color-amber-600: #d97706;
+    --color-amber-700: #fbbf24;
+    --color-amber-800: #fcd34d;
+    --color-amber-900: #fde68a;
+    --color-amber-950: #fef3c7;
+
+    --color-rose-50: rgba(239, 68, 68, 0.14);
+    --color-rose-100: rgba(239, 68, 68, 0.22);
+    --color-rose-200: rgba(239, 68, 68, 0.4);
+    --color-rose-300: #fca5a5;
+    --color-rose-400: #f87171;
+    --color-rose-500: #ef4444;
+    --color-rose-600: #dc2626;
+    --color-rose-700: #f87171;
+    --color-rose-800: #fca5a5;
+    --color-rose-900: #fecaca;
+    --color-rose-950: #fee2e2;
+
+    --color-violet-50: rgba(139, 92, 246, 0.16);
+    --color-violet-100: rgba(139, 92, 246, 0.26);
+    --color-violet-200: rgba(139, 92, 246, 0.42);
+    --color-violet-300: #c4b5fd;
+    --color-violet-400: #a78bfa;
+    --color-violet-500: #8b5cf6;
+    --color-violet-600: #7c3aed;
+    --color-violet-700: #a78bfa;
+    --color-violet-800: #c4b5fd;
+    --color-violet-900: #ddd6fe;
+    --color-violet-950: #ede9fe;
+
+    --color-cyan-50: rgba(14, 165, 233, 0.14);
+    --color-cyan-100: rgba(14, 165, 233, 0.22);
+    --color-cyan-200: rgba(14, 165, 233, 0.4);
+    --color-cyan-300: #7dd3fc;
+    --color-cyan-400: #38bdf8;
+    --color-cyan-500: #0ea5e9;
+    --color-cyan-600: #0284c7;
+    --color-cyan-700: #38bdf8;
+    --color-cyan-800: #7dd3fc;
+    --color-cyan-900: #bae6fd;
+    --color-cyan-950: #e0f2fe;
+
+    /* elevation — a light hairline and deeper shadow read as depth on dark */
+    --shadow-flat: 0 0 0 1px rgba(255, 255, 255, 0.06);
+    --shadow-card:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 1px 2px -1px rgba(0, 0, 0, 0.5);
+    --shadow-lift:
+      0 0 0 1px rgba(255, 255, 255, 0.07),
+      0 4px 8px -2px rgba(0, 0, 0, 0.5),
+      0 12px 24px -10px rgba(0, 0, 0, 0.6);
+    --shadow-panel:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 10px 24px -8px rgba(0, 0, 0, 0.55),
+      0 20px 48px -16px rgba(0, 0, 0, 0.6);
+    --shadow-modal:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 30px 70px -20px rgba(0, 0, 0, 0.75);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Keyframes                                                          */
+/* ------------------------------------------------------------------ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Overlay / modal entrance: scale to just past 1, then settle. Never
+   animate from scale(0) — the intermediate scale is what reads as mass. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scale-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@keyframes drop-settle {
+  0% {
+    scale: 1.04;
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--settle, #ed7333) 60%, transparent),
+      0 16px 30px -8px color-mix(in srgb, var(--settle, #ed7333) 50%, transparent);
+  }
+  100% {
+    scale: 1;
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes ghost-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes badge-changed {
+  0% {
+    scale: 0.8;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  35% {
+    scale: 1.12;
+    box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 25%, transparent);
+  }
+  100% {
+    scale: 1;
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(16px) scale(0.98);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes orb-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-14px, 12px) scale(1.25);
+  }
+}
+
+@keyframes hero-shift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes hero-sweep {
+  0% {
+    transform: translateX(0) skewX(-12deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    transform: translateX(560%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slot-open {
+  from {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: -10px;
+  }
+  to {
+    max-height: 90px;
+    opacity: 1;
+  }
+}
+
+@keyframes drop-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  15% {
+    transform: translateX(-7px);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.5);
+  }
+  35% {
+    transform: translateX(6px);
+  }
+  55% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes confetti {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), calc(var(--dy) + 60px)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+@keyframes count-bump {
+  0% {
+    scale: 0.6;
+  }
+  60% {
+    scale: 1.2;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+@keyframes badge-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  80%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(223, 101, 39, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(223, 101, 39, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(223, 101, 39, 0);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                               */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  border-color: var(--color-silver-200);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-silver-100);
+  color: var(--color-navy-900);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* The application canvas: an authored field tinted toward the brand
+   instead of a flat grey, so the white panels read as sitting on
+   something rather than floating in nothing. */
+.app-canvas {
+  background-color: var(--color-silver-100);
+  background-image:
+    radial-gradient(rgba(15, 23, 42, 0.055) 1px, transparent 1px),
+    radial-gradient(900px 520px at 0% -10%, rgba(237, 115, 51, 0.10), transparent 66%),
+    radial-gradient(800px 520px at 100% -8%, rgba(59, 130, 246, 0.10), transparent 64%),
+    radial-gradient(800px 560px at 100% 105%, rgba(139, 92, 246, 0.07), transparent 68%),
+    radial-gradient(700px 520px at 0% 105%, rgba(20, 184, 166, 0.07), transparent 68%);
+  background-size: 22px 22px, auto, auto, auto, auto;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
+}
+
+/* Dark canvas: a near-black espresso field with coloured ambient light,
+   so glass panels have something warm and cool to pick up. */
+:root[data-theme='dark'] .app-canvas {
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    radial-gradient(900px 520px at 0% -10%, rgba(237, 115, 51, 0.12), transparent 66%),
+    radial-gradient(800px 520px at 100% -8%, rgba(59, 130, 246, 0.14), transparent 64%),
+    radial-gradient(800px 560px at 100% 105%, rgba(139, 92, 246, 0.12), transparent 68%);
+  background-size: 22px 22px, auto, auto, auto;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+}
+:root[data-theme='dark'] .sidebar-chrome {
+  background-image:
+    radial-gradient(360px 240px at 0% 0%, rgba(237, 115, 51, 0.10), transparent 70%),
+    linear-gradient(180deg, #121826 0%, #0e1320 100%);
+}
+
+/* Numbers line up in tables, KPIs and money columns. */
+.tnum,
+table,
+input[type='number'] {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--color-sapphire-200);
+  color: var(--color-navy-950);
+}
+
+/* A visible, consistent keyboard path. Never removed without replacement. */
+:focus-visible {
+  outline: 2px solid var(--color-sapphire-600);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Thin, unobtrusive scrollbars that do not fight the gesture. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-silver-300);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-silver-400);
+  background-clip: content-box;
+}
+
+/* Charts should not draw a focus box when clicked. */
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+}
+
+/* Surface sheen for elevated dark chrome (hero bands, brand marks).
+   NOTE: applied as an overlay element, never on the same node as a
+   Tailwind gradient utility this file would out-rank in the cascade. */
+.sheen {
+  background-image:
+    radial-gradient(120% 140% at 0% 0%, rgba(255, 255, 255, 0.16) 0%, transparent 55%),
+    radial-gradient(100% 100% at 100% 0%, rgba(237, 115, 51, 0.35) 0%, transparent 60%);
+}
+
+/* Light lavender navigation chrome that follows the theme tokens. */
+.sidebar-chrome {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(360px 220px at 0% 0%, rgba(237, 115, 51, 0.07), transparent 70%),
+    linear-gradient(180deg, var(--color-surface) 0%, var(--color-silver-50) 100%);
+}
+
+/* Keyboard focus on navigation: one clean inset ring, no offset outline. */
+.sidebar-chrome a:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
+/* Page titles: ink fading into the brand indigo. */
+.title-gradient {
+  color: var(--color-navy-900);
+}
+
+/* A soft light sweep across solid buttons on hover. */
+.btn-sheen {
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.28) 50%, transparent 65%);
+  transform: translateX(-120%);
+}
+
+/* Loading placeholder. */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-silver-200) 25%, var(--color-silver-100) 50%, var(--color-silver-200) 75%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+}
+
+/* Touch targets are physical: the visual control can stay compact while
+   the hit area meets 44px on coarse pointers. */
+@media (pointer: coarse) {
+  .hit {
+    position: relative;
+  }
+  .hit::after {
+    content: '';
+    position: absolute;
+    inset: -7px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Print                                                              */
+/* ------------------------------------------------------------------ */
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  @page {
+    margin: 14mm;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion                                                     */
+/* Opt-in: the static design is the default, and motion is added only
+   when the visitor has not asked for less of it. Functional signals
+   (focus, progress, spinners) stay alive; spatial movement becomes a
+   plain fade.                                                            */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition:
+      transform 160ms var(--ease-out-quart),
+      box-shadow 160ms var(--ease-out-quart);
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+  .pressable {
+    transition:
+      transform 120ms var(--ease-out-quart),
+      box-shadow 150ms var(--ease-out-quart),
+      background-color 150ms var(--ease-out-quart),
+      color 150ms var(--ease-out-quart),
+      border-color 150ms var(--ease-out-quart);
+  }
+  .pressable:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .row-hover {
+    transition: background-color 130ms var(--ease-out-quart);
+  }
+  .page-enter {
+    animation: fade-up 240ms var(--ease-out-quint) both;
+  }
+  /* Top-level blocks on a page rise in one after another. */
+  .page-enter > * {
+    animation: fade-up 420ms var(--ease-out-expo) both;
+  }
+  .page-enter > :nth-child(2) { animation-delay: 60ms; }
+  .page-enter > :nth-child(3) { animation-delay: 120ms; }
+  .page-enter > :nth-child(4) { animation-delay: 180ms; }
+  .page-enter > :nth-child(5) { animation-delay: 240ms; }
+  .page-enter > :nth-child(n + 6) { animation-delay: 300ms; }
+  /* A dropped card settles into place with a brief ring of light. */
+  .drop-settle {
+    animation: drop-settle 800ms var(--ease-out-expo) both;
+  }
+  /* The placeholder grows into the lane instead of popping in. */
+  .ghost-in {
+    animation: ghost-in 220ms var(--ease-out-expo) both;
+  }
+  /* Controls ease between states instead of snapping. */
+  select,
+  input:not([type='range']),
+  textarea {
+    transition:
+      border-color 150ms var(--ease-out-quart),
+      box-shadow 150ms var(--ease-out-quart),
+      background-color 150ms var(--ease-out-quart);
+  }
+  /* Table rows ease in when they are created (first load, new record,
+     filter results); existing rows that merely re-render do not replay. */
+  tbody > tr {
+    animation: row-in 320ms var(--ease-out-expo) both;
+  }
+  tbody > tr:nth-child(2) { animation-delay: 30ms; }
+  tbody > tr:nth-child(3) { animation-delay: 60ms; }
+  tbody > tr:nth-child(4) { animation-delay: 90ms; }
+  tbody > tr:nth-child(5) { animation-delay: 120ms; }
+  tbody > tr:nth-child(6) { animation-delay: 150ms; }
+  tbody > tr:nth-child(n + 7) { animation-delay: 180ms; }
+  /* Content that swaps with a tab fades up instead of snapping. */
+  .tab-swap {
+    animation: fade-up 320ms var(--ease-out-expo) both;
+  }
+  .badge-changed {
+    animation: badge-changed 800ms var(--ease-out-expo) both;
+  }
+  .toast-out {
+    animation: toast-out 180ms var(--ease-out-quart) both;
+  }
+  .field-shake {
+    animation: shake 380ms var(--ease-out-quart) both;
+  }
+  .field-error {
+    animation: fade-up 220ms var(--ease-out-expo) both;
+  }
+  /* Coloured light drifting slowly behind glass cards. */
+  .orb-drift {
+    animation: orb-drift 9s ease-in-out infinite alternate;
+  }
+  /* The hero gradient breathes, and a band of light crosses it now and then. */
+  .hero-animated {
+    background-size: 160% 160%;
+    animation: hero-shift 14s ease-in-out infinite alternate;
+  }
+  .hero-sweep {
+    animation: hero-sweep 7s var(--ease-out-quart) 1.5s infinite;
+  }
+  /* Kanban: a slot opens in the target lane, pushing cards down. */
+  .slot-open {
+    animation: slot-open 280ms var(--ease-out-expo) both;
+    overflow: hidden;
+  }
+  /* A lost lead shakes once where it lands. */
+  .drop-shake {
+    animation: drop-shake 520ms var(--ease-out-quart) both;
+  }
+  .confetti-bit {
+    animation: confetti 950ms cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  }
+  .count-bump {
+    animation: count-bump 380ms var(--ease-out-expo) both;
+  }
+  .badge-ping {
+    animation: badge-ping 1800ms var(--ease-out-quart) infinite;
+  }
+  .btn-sheen:hover::after {
+    transform: translateX(120%);
+    transition: transform 650ms var(--ease-out-quart);
+  }
+  .skeleton {
+    animation: shimmer 1.4s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
