@@ -1,6 +1,6 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { Archive, Building2, Database as DatabaseIcon, Download, KeyRound, RefreshCw, Recycle, RotateCcw, Save, Search, Settings2, ShieldAlert, Trash2, Upload } from 'lucide-react'
+import { Archive, Building2, Globe, MapPin, Phone, ShieldCheck, Database as DatabaseIcon, Download, KeyRound, RefreshCw, Recycle, RotateCcw, Save, Search, Settings2, ShieldAlert, Trash2, Upload } from 'lucide-react'
 import type { Company } from '@/types'
 import { useData } from '@/store/DataContext'
 import { useAuth } from '@/store/AuthContext'
@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { ConfirmDialog } from '@/components/ui/Modal'
-import { Field, Input, Select } from '@/components/ui/Form'
+import { Field, Input } from '@/components/ui/Form'
+import { FormSection } from '@/components/ui/FormSection'
 import { PageHeader, SearchInput } from '@/components/ui/Layout'
 import { Table, TableEmptyRow, TableShell, TBody, Td, Th, THead, TR } from '@/components/ui/Table'
 import { CrudPage } from '@/components/Crud'
@@ -30,6 +31,14 @@ const PROFILE_FIELDS: Array<{ key: keyof Company; label: string; required?: bool
   { key: 'address1', label: 'Address line 1', section: 'Address', full: true }, { key: 'address2', label: 'Address line 2', full: true }, { key: 'city', label: 'City / village', required: true }, { key: 'taluka', label: 'Taluka' },
   { key: 'district', label: 'District' }, { key: 'state', label: 'State', required: true }, { key: 'country', label: 'Country' }, { key: 'pin', label: 'PIN code' },
   { key: 'facebook', label: 'Facebook', section: 'Social' }, { key: 'instagram', label: 'Instagram' }, { key: 'linkedin', label: 'LinkedIn' }, { key: 'youtube', label: 'YouTube' },
+]
+
+const profileGroups: Array<{ title: string; description: string; icon: ReactNode; cols: 2 | 3 | 4; fields: typeof PROFILE_FIELDS }> = [
+  { title: 'Identity', description: 'Name and ownership of the business', icon: <Building2 className="h-3.5 w-3.5" />, cols: 3, fields: PROFILE_FIELDS.filter((f) => ['name', 'brand', 'tagline', 'owner'].includes(f.key)).map((f) => ({ ...f, full: f.key === 'name' })) },
+  { title: 'Registration', description: 'Tax and statutory numbers printed on invoices', icon: <ShieldCheck className="h-3.5 w-3.5" />, cols: 3, fields: PROFILE_FIELDS.filter((f) => ['gstin', 'pan', 'msme'].includes(f.key)) },
+  { title: 'Contact', description: 'How customers and vendors reach you', icon: <Phone className="h-3.5 w-3.5" />, cols: 4, fields: PROFILE_FIELDS.filter((f) => ['email', 'mobile', 'whatsapp', 'website'].includes(f.key)) },
+  { title: 'Address', description: 'Registered office address', icon: <MapPin className="h-3.5 w-3.5" />, cols: 4, fields: PROFILE_FIELDS.filter((f) => ['address1', 'address2', 'city', 'taluka', 'district', 'state', 'country', 'pin'].includes(f.key)).map((f) => ({ ...f, full: f.key === 'address1' || f.key === 'address2' })) },
+  { title: 'Social', description: 'Optional online presence', icon: <Globe className="h-3.5 w-3.5" />, cols: 4, fields: PROFILE_FIELDS.filter((f) => ['facebook', 'instagram', 'linkedin', 'youtube'].includes(f.key)) },
 ]
 
 export function ProfilePage() {
@@ -73,18 +82,19 @@ export function ProfilePage() {
     <>
       <PageHeader title="My Profile" eyebrow="Company Profile" icon={<Building2 className="h-5 w-5" />} description="Your company's identity. These details print on every invoice, quotation and report."
         actions={canEdit ? <><Button variant="outline" disabled={!dirty} onClick={() => { setForm(db.company); setErrors({}) }}>Discard</Button><Button icon={<Save className="h-4 w-4" />} disabled={!dirty} onClick={save}>Save changes</Button></> : undefined} />
-      <Card>
-        <fieldset disabled={!canEdit} className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PROFILE_FIELDS.map((f) => (
-            <div key={f.key} className={f.full ? 'sm:col-span-2 lg:col-span-2' : ''}>
-              {f.section ? <h3 className="mb-3 mt-1 border-b border-silver-200 pb-1.5 text-[11.5px] font-bold tracking-[0.12em] text-silver-600 uppercase sm:col-span-2 lg:col-span-4">{f.section}</h3> : null}
-              <Field label={f.label} required={f.required} error={errors[f.key]}>
-                <Input type={f.type ?? 'text'} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)} invalid={Boolean(errors[f.key])} />
-              </Field>
-            </div>
-          ))}
-        </fieldset>
-      </Card>
+      <fieldset disabled={!canEdit} className="flex min-w-0 flex-col gap-5 border-0 p-0">
+        {profileGroups.map((g) => (
+          <FormSection key={g.title} title={g.title} description={g.description} icon={g.icon} cols={g.cols} className="shadow-card">
+            {g.fields.map((f) => (
+              <div key={f.key} className={f.full ? g.cols === 4 ? 'lg:col-span-2' : 'sm:col-span-2 lg:col-span-3' : ''}>
+                <Field label={f.label} required={f.required} error={errors[f.key]}>
+                  <Input type={f.type ?? 'text'} value={String(form[f.key] ?? '')} onChange={(e) => set(f.key, e.target.value)} invalid={Boolean(errors[f.key])} />
+                </Field>
+              </div>
+            ))}
+          </FormSection>
+        ))}
+      </fieldset>
       <Card>
         <CardHeader title="Change password" subtitle={`Signed in as ${user?.username}`} icon={<KeyRound className="h-4 w-4" />} accent="gold" />
         <div className="mt-4 grid gap-4 sm:grid-cols-3">

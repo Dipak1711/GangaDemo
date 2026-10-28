@@ -8,6 +8,7 @@ import { useAccess } from '@/hooks/useAccess'
 import { Button } from '@/components/ui/Button'
 import { Checkbox, Field, Input, Select, Textarea } from '@/components/ui/Form'
 import { EmptyState, PageHeader, SearchInput } from '@/components/ui/Layout'
+import { FormSection } from '@/components/ui/FormSection'
 import { ConfirmDialog, Modal, type ModalSize } from '@/components/ui/Modal'
 import { Table, TableEmptyRow, TableShell, TBody, Td, Th, THead, TR } from '@/components/ui/Table'
 import { StatCard, type StatCardProps } from '@/components/ui/StatCard'
@@ -212,6 +213,19 @@ export function CrudPage(props: CrudProps) {
   }
 
   const statCards = stats ? stats(allRows, db) : []
+
+  // Fields are grouped under their section headings; a form with no sections stays one plain grid.
+  const groups = useMemo(() => {
+    const shown = draft ? fields.filter((f) => !f.visible || f.visible(draft)) : []
+    const anySection = shown.some((f) => f.section)
+    const out: Array<{ title?: string; fields: FieldDef[] }> = []
+    shown.forEach((f, i) => {
+      if (f.section || out.length === 0) out.push({ title: f.section ?? (anySection ? 'Details' : undefined), fields: [] })
+      out[out.length - 1].fields.push(f)
+      void i
+    })
+    return out
+  }, [fields, draft])
   const hideCls = (c: ColumnDef) => (c.hideBelow === 'md' ? 'hidden md:table-cell' : c.hideBelow === 'lg' ? 'hidden lg:table-cell' : '')
 
   return (
@@ -372,10 +386,11 @@ export function CrudPage(props: CrudProps) {
                 save()
               }}
               noValidate
-              className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2 lg:grid-cols-3"
+              className="flex flex-col gap-4"
             >
-              {fields.map((f) => {
-                if (f.visible && !f.visible(draft)) return null
+              {groups.map((g, gi) => (
+                <FormSection key={gi} title={g.title}>
+              {g.fields.map((f) => {
                 const disabled = f.disabled?.(draft, isNew)
                 const error = errors[f.key]
                 const span = f.full || f.render || f.type === 'textarea' ? 'sm:col-span-2 lg:col-span-3' : ''
@@ -426,16 +441,15 @@ export function CrudPage(props: CrudProps) {
                   )
                 }
                 return (
-                  <div key={f.key} className={`${span} flex flex-col`}>
-                    {f.section ? (
-                      <h3 className="-mb-1 mt-2 border-b border-silver-200 pb-1.5 text-[11.5px] font-bold tracking-[0.12em] text-silver-600 uppercase sm:col-span-2 lg:col-span-3">{f.section}</h3>
-                    ) : null}
-                    <Field label={f.type === 'checkbox' ? undefined : f.label} required={f.required} error={error} hint={f.type === 'checkbox' ? undefined : f.hint} className={f.section ? 'mt-3' : ''}>
+                  <div key={f.key} className={span}>
+                    <Field label={f.type === 'checkbox' ? undefined : f.label} required={f.required} error={error} hint={f.type === 'checkbox' ? undefined : f.hint}>
                       {f.type === 'checkbox' ? <div className="flex h-[42px] items-center">{control}</div> : control}
                     </Field>
                   </div>
                 )
               })}
+                </FormSection>
+              ))}
               <button type="submit" className="hidden" aria-hidden="true" tabIndex={-1} />
             </form>
           )
